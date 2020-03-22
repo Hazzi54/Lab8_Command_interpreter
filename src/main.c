@@ -6,7 +6,6 @@ int main() {
     char *line;
     char **mas;
     line = read_string_func();
-    puts("Here main");
-    mas = parsing_func("ls -la -qw");
+    mas = parsing_func(line);
     return 0;
 }

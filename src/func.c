@@ -16,9 +16,34 @@ int check(char *str) {
 }
 
 char *read_string_func() {
-    char *buf = NULL;        // here
-    getline(&buf, 0, stdin);
-    return buf;
+    int size = 256, i = 0;
+    char *buf = malloc(sizeof(char) * size);
+    if(!buf) {
+        fprintf(stderr, "Memory allocation err\n");
+        exit(EXIT_FAILURE);
+    }
+    int symbol;
+    
+    while(1) {
+        symbol = getchar();
+        if((symbol == EOF) || (symbol == '\n')) {
+            buf[i] = '\0';
+            return buf;
+        }
+        else {
+            buf[i] = symbol;
+        }
+        i++;
+        
+        if(i >= size) {
+            size += 32;
+            buf = realloc(buf, sizeof(char) * size);
+            if(!buf) {
+                fprintf(stderr, "Memory allocation err\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
 }
 
 #define TOK_DEL " \t\n"
@@ -33,12 +58,8 @@ char **parsing_func(char *str) {
         fprintf(stderr, "Memory allocation err\n");
         exit(EXIT_FAILURE);
     }
-    
-    puts(str);
-    puts(str_tmp);
     token = strtok(str_tmp, TOK_DEL);
-    puts(token);
-    while(token != NULL) {   //here
+    while(token != NULL) {
         mas[i] = token;
         i++;
         
@@ -55,9 +76,6 @@ char **parsing_func(char *str) {
         token = strtok(NULL, TOK_DEL);
     }
     mas[i] = NULL;
-    puts(mas[0]);
-    puts(mas[1]);
-    puts(mas[2]);
     return mas;
 }
 
