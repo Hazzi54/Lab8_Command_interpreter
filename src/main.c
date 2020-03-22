@@ -6,7 +6,6 @@ int main(int argc, char *argv[]) {
     char command[50], buf[50];
     fgets(command, 50, stdin);
     fflush(stdin);
-    int var = check(command);
     int fd[2], i;
     pid_t pid;
     pipe(fd);
