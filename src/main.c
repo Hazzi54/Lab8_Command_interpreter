@@ -3,6 +3,11 @@
 // fd[0] - read; fd[1] - write
 
 int main(int argc, char *argv[]) {
+    char *line;
+    char **mas;
+    line = read_string_func();
+    mas = parsing_func(line);
+
     char command[50], buf[50];
     fgets(command, 50, stdin);
     fflush(stdin);
