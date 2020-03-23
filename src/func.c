@@ -50,7 +50,7 @@ char *read_string_func() {
 
 char **parsing_func(char *str) {
     int size = 32, i = 0, l = strlen(str);
-    char **mas = malloc(size * sizeof(char *));
+    char **mas = (char**)malloc(size * sizeof(char *));
     char *token, str_tmp[l];
     strcpy(str_tmp, str);
     
@@ -60,7 +60,8 @@ char **parsing_func(char *str) {
     }
     token = strtok(str_tmp, TOK_DEL);
     while(token != NULL) {
-        mas[i] = token;
+        mas[i] = (char *)malloc(strlen(token) * sizeof(char));
+        strcpy(mas[i], token);
         i++;
         
         if(i >= size) {

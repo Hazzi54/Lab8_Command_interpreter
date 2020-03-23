@@ -6,13 +6,17 @@ int main(int argc, char *argv[]) {
     char *line;
     char **mas;
     line = read_string_func();
+    puts(line);
     mas = parsing_func(line);
 
-    char command[50], buf[50];
-    fgets(command, 50, stdin);
-    fflush(stdin);
+    if(fork()) {
+        wait(NULL);
+    }
+    else {
+        execvp(mas[0], mas);
+    }
 
-    int fd1[2];
+    /*int fd1[2];
     pipe(fd1);
     if(fork()) {       // parent
         close(fd1[0]);
@@ -31,6 +35,6 @@ int main(int argc, char *argv[]) {
         close(fd1[0]);
         buf[strlen(buf) - 1] = '\0';
         execvp(buf, argv);
-    }  
+    }*/
     return 0;
 }
