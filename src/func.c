@@ -15,18 +15,6 @@ int check(char *str) {
     return -1;
 }
 
-void instruct(char *str, char *argv[]) {
-    int *stat;
-    pid_t pid;
-    pid = fork();
-    if(pid == 0) {
-        execvp(str, argv);
-    }
-    else {
-        wait(stat);
-    }
-}
-
 
 
 

@@ -7,20 +7,24 @@ int main(int argc, char *argv[]) {
     fgets(command, 50, stdin);
     fflush(stdin);
     int var = check(command);
-    int fd[2], i;
-    pid_t pid;
+    int fd1[2], fd2[2], i;
+    //pid_t pid1, pid2;
     pipe(fd);
     if(fork()) {       // parent
-        close(fd[0]);
-        write(fd[1], command, strlen(command) + 1);
-        close(fd[1]);
+        close(fd1[0]);
+        if(var < 0)
+            write(fd1[1], command, strlen(command) + 1);
+        else
+            write(fd1[1], command, var + 1);
+        close(fd1[1]);
         wait(NULL);
+
     }
-    else {             // child
-        //dup2(fd[1], 1);
-        close(fd[1]);
-        read(fd[0], buf, sizeof(buf));
-        close(fd[0]);
+    else {             // child 1
+        //dup2(fd1[1], 1);
+        close(fd1[1]);
+        read(fd1[0], buf, sizeof(buf));
+        close(fd1[0]);
         buf[strlen(buf) - 1] = '\0';
         execvp(buf, argv);
     }  
