@@ -76,7 +76,35 @@ char **parsing_func(char *str) {
     return mas;
 }
 
+char *read_from_pipe(int fd) {
+    char c, *str_result;
+    int i = 0;
+    str_result = (char *)malloc(sizeof(char));
+    if(!str_result) {
+        perror("malloc() ");
+        exit(EXIT_FAILURE);
+    }
 
+    while(read(fd, &c, sizeof(char))) {
+        str_result[i] = c;
+        i++;
+        str_result = (char *)realloc(str_result, (i + 1) * sizeof(char));
+        if(!str_result) {
+            perror("realloc() ");
+            exit(EXIT_FAILURE);
+        }
+    }
+    close(fd);
+    return str_result;
+}
+
+void launch_new_proc(int *fd1, int *fd2) {
+    char *str_tmp = read_from_pipe(fd1[0]);
+    puts(str_tmp);
+    char **mas = parsing_func(str_tmp);
+    free(str_tmp);
+    execvp(mas[0], mas);
+}
 
 
 

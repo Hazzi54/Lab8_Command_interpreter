@@ -22,16 +22,8 @@ int main(int argc, char *argv[]) {
         else
             write(fd1[1], line, length);
         close(fd1[1]);
-
-        char c, *str_result;
-        int i = 0;
-        str_result = (char *)malloc(sizeof(char));
-        while(read(fd2[0], &c, sizeof(char))) {
-            str_result[i] = c;
-            i++;
-            str_result = (char *)realloc(str_result, (i + 1) * sizeof(char));
-        }
-        close(fd2[0]);
+        
+        char *str_result = read_from_pipe(fd2[0]);
         wait(NULL);
         if(ch < 0) {
             puts(str_result);
@@ -42,7 +34,7 @@ int main(int argc, char *argv[]) {
             if(fork()) {  // parent
                 close(fd1[0]);
                 close(fd2[0]);
-                i = 1;
+                int i = 1;
                 while(i < strlen(buf2)) {
                     write(fd1[1], &buf2[i], 1);
                     i++;
@@ -57,20 +49,7 @@ int main(int argc, char *argv[]) {
                 close(fd2[1]);
                 dup2(fd2[0], 0);
                 
-                char *str_tmp, c;
-                int i = 0;
-                str_tmp = (char *)malloc(sizeof(char));
-                while(read(fd1[0], &c, sizeof(char))) {
-                    str_tmp[i] = c;
-                    i++;
-                    str_tmp = (char *)realloc(str_tmp, (i + 1) * sizeof(char));
-                }
-
-                close(fd1[0]);
-                puts(str_tmp);
-                mas = parsing_func(str_tmp);
-                free(str_tmp);
-                execvp(mas[0], mas);
+                launch_new_proc(fd1, fd2);
             }
         }
     }
@@ -79,19 +58,7 @@ int main(int argc, char *argv[]) {
         close(fd2[0]);
         dup2(fd2[1], 1);
 
-        char *str_tmp, c;
-        int i = 0;
-        str_tmp = (char *)malloc(sizeof(char));
-        while(read(fd1[0], &c, sizeof(char))) {
-            str_tmp[i] = c;
-            i++;
-            str_tmp = (char *)realloc(str_tmp, (i + 1) * sizeof(char));
-        }
-        close(fd1[0]);
-        puts(str_tmp);
-        mas = parsing_func(str_tmp);
-        free(str_tmp);
-        execvp(mas[0], mas);
+        launch_new_proc(fd1, fd2);
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

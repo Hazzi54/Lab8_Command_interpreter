@@ -12,6 +12,7 @@
 int check(char *);
 char *read_string_func();
 char **parsing_func(char *);
-void launch_proc_func(char **);
+char *read_from_pipe(int);
+void launch_new_proc(int *, int *);
 
 #endif
